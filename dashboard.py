@@ -33,6 +33,18 @@ st.markdown("""
   }
   .metric-container:hover { transform: translateY(-6px); }
   footer { text-align:center; padding:10px; font-size:14px; color:#5a3e1b; }
+
+  /* Custom black warning box */
+  .custom-warning {
+      background-color: #f8f5e9;
+      border: 2px solid #d2b48c;
+      border-radius: 10px;
+      padding: 15px;
+      color: black;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+  }
 </style>
 """, unsafe_allow_html=True)
 
@@ -42,7 +54,7 @@ def load_data():
     try:
         data = pd.read_csv("merged.csv.csv", encoding="ISO-8859-1", header=4)
     except Exception as e:
-        st.error(f"⚠ Couldn't load 'merged.csv.csv'. {e}")
+        st.error(f"⚠️ Couldn't load 'merged.csv.csv'. {e}")
         return pd.DataFrame()
 
     try:
@@ -162,7 +174,7 @@ def plot_funding_trend(df):
 
 # --- TOP CITIES (BAR CHART) ---
 def plot_top_cities(df):
-    st.subheader("🏙 Top 10 Cities by Deal Count")
+    st.subheader("🏙️ Top 10 Cities by Deal Count")
     city_df = df['City'].value_counts().nlargest(10).reset_index()
     city_df.columns = ['City', 'Deal Count']
 
@@ -217,7 +229,7 @@ def plot_investment_pie(df):
 
 # --- MAIN APP ---
 def main():
-    # Clean, minimal title
+    # Clean, centered title
     st.markdown(
         "<h1 style='text-align: center; color: #3b2f2f; font-family: Poppins;'>Indian Startup Funding Dashboard</h1>",
         unsafe_allow_html=True
@@ -233,7 +245,7 @@ def main():
         return
 
     # Sidebar filters
-    st.sidebar.header("🎛 Filter Data")
+    st.sidebar.header("🎛️ Filter Data")
     min_year, max_year = int(df['Year'].min()), int(df['Year'].max())
     year_range = st.sidebar.slider("📅 Year Range", min_value=min_year, max_value=max_year, value=(min_year, max_year))
     all_cities = sorted(df['City'].unique().tolist())
@@ -252,7 +264,7 @@ def main():
     st.markdown("<hr>", unsafe_allow_html=True)
 
     if filtered_df.empty:
-        st.warning("⚠ No data matches your filters.")
+        st.markdown("<div class='custom-warning'>⚠️  data doesn't matches your filters.</div>", unsafe_allow_html=True)
         return
 
     display_kpis(filtered_df)
@@ -265,7 +277,7 @@ def main():
     st.markdown("<hr>", unsafe_allow_html=True)
     plot_investment_pie(filtered_df)
 
-    st.markdown("<hr><footer>© 2025 | Crafted using Streamlit & Plotly</footer>", unsafe_allow_html=True)
+    st.markdown("<hr><footer>©️ 2025 | Crafted using Streamlit & Plotly</footer>", unsafe_allow_html=True)
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
